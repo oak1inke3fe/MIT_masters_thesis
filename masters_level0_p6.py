@@ -11,21 +11,23 @@ Created on Fri Jun 10 08:54:35 2022
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
 
-This is Level 0 pipeline: taking quality controlled Level00 data, making sure there is enough
-'good' data, aligning it to the wind (for applicable sensors) then despiking it (aka getting 
-rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
-Edited files are saved to the Level 1 folder, in their respective "port" sub-folder as .csv 
-files.                                                                                          
+This is Level 0 pipeline for the Paros high-resolution pressure sensors recored on Port 6: 
+In this file, we are taking quality controlled Level00 data, making sure there is enough 'good' 
+data, depiking the extremes out of the data, and then interpolating to the correct sensor 
+sampling frequency. Edited files are saved to the Level1_align-interp folder.
 
+Input file location:
+    code_pipeline/Level1_errorLinesRemoved
 INPUT files:
-    .txt files per 20 min period per port from Level1_errorLinesRemoved and sub-port folder
+    .txt files per 20 min period per instrument-port 
+
+Output file location:
+    code_pipeline/Level1_align-interp
 OUPUT files:
-    .csv files per 20 min period per port into LEVEL_1 folder
-    wind has been aligned to mean wind direction
-    files have been despiked and interpolated to all be the same size
-    all units the same as the input raw units
+    .csv files per 20 min period per instrument-port 
+    wind has been aligned to mean wind direction (if applicable)
+    files have been interpolated to all be the same size 
     
     
 """
@@ -75,7 +77,7 @@ def despikeThis(input_df,n_std):
 # returns: output_df
 print('done with despike_this function')
 #%%
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
 filename_generalDate = []
 filename_port1 = []
@@ -115,24 +117,22 @@ print('port 5 length = '+ str(len(filename_port5)))
 print('port 6 length = '+ str(len(filename_port6)))
 print('port 7 length = '+ str(len(filename_port7)))
 #%% THIS CODE ALIGNS, INTERPOLATES, THEN DESPIKES THE RAW DATA W/REMOVED ERR LINES
-# filepath= r"E:\ASIT-research\BB-ASIT\test_Level1_errorLinesRemoved"
-# filepath= r"E:\ASIT-research\BB-ASIT\Level1_errorLinesRemoved"
+
 
 start=datetime.datetime.now()
 
 
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
-# path_save = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-path_save = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+
+path_save = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_align-interp/"
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
     
         
-        if filename.startswith('mNode_Port6'):
-            # path_save = r"E:\ASIT-research\BB-ASIT\Level1_align-despike-interp\port6/"
+        if filename.startswith('mNode_Port6'):        
             s6_df = pd.read_csv(file,index_col=None, header = None) #read into a df
             s6_df.columns =['sensor','p'] #rename columns            
             s6_df= s6_df[s6_df['sensor'] != 0] #get rid of any rows where the sensor is 0 because this is an error row

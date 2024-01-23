@@ -11,21 +11,22 @@ Created on Fri Jun 10 08:54:35 2022
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
 
-This is Level 0 pipeline: taking quality controlled Level00 data, making sure there is enough
-'good' data, aligning it to the wind (for applicable sensors) then despiking it (aka getting 
-rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
-Edited files are saved to the Level 1 folder, in their respective "port" sub-folder as .csv 
-files.                                                                                          
+This is Level 0 pipeline for the meteorological sensors recored on Port 5: taking quality controlled Level00 data, 
+making sure there is enough 'good' data and interpolating it to the correct sensor sampling frequency. 
+Edited files are saved to the Level1_align-interp folder                                                                     
 
+Input file location:
+    code_pipeline/Level1_errorLinesRemoved
 INPUT files:
-    .txt files per 20 min period per port from Level1_errorLinesRemoved and sub-port folder
+    .txt files per 20 min period per instrument-port 
+
+Output file location:
+    code_pipeline/Level1_align-interp
 OUPUT files:
-    .csv files per 20 min period per port into LEVEL_1 folder
-    wind has been aligned to mean wind direction
-    files have been despiked and interpolated to all be the same size
-    all units the same as the input raw units
+    .csv files per 20 min period per instrument-port 
+    wind has been aligned to mean wind direction (if applicable)
+    files have been interpolated to all be the same size    
     
     
 """
@@ -52,8 +53,7 @@ def interp_met(df_met):
 # returns: s5_df_met_interp
 print('done with interp_met function')
 #%%
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
-# filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
 filename_generalDate = []
 filename_port1 = []
@@ -63,7 +63,7 @@ filename_port4 = []
 filename_port5 = []
 filename_port6 = []
 filename_port7 = []
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
@@ -101,18 +101,17 @@ s5_df.columns =['date','YYYY','MM','DD','time',
                 'bat_volt','pannel_T', 'T1', 'T2','TIR',
                 'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                 'fix', 'GPS', 'Nsat'] 
-#%% THIS CODE ALIGNS, INTERPOLATES, THEN DESPIKES THE RAW DATA W/REMOVED ERR LINES
-# filepath= r"E:\ASIT-research\BB-ASIT\test_Level1_errorLinesRemoved"
-# filepath= r"E:\ASIT-research\BB-ASIT\Level1_errorLinesRemoved"
+#%% THIS CODE ALIGNS, AND INTERPOLATES THE RAW DATA W/REMOVED ERR LINES
+
 
 start=datetime.datetime.now()
 
 
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
-# path_save = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-path_save = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/"
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+
+path_save = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/"
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
@@ -131,8 +130,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                             'bat_volt','pannel_T', 'T1', 'T2','TIR',
                             'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                             'fix', 'GPS', 'Nsat'] 
-            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating
-                # df_despiked = despikeThis(s5_df,5) #despike doesn't work unless it's a columns of all number
+            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating            
                 sigma_sb = 5.67*(10**(-8))                
                 IRt = s5_df['IR'] + sigma_sb*(s5_df['TIR']+273.15)**4
                 s5_df['IRt'] = IRt
@@ -155,8 +153,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                             'bat_volt','pannel_T', 'T1', 'T2','TIR',
                             'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                             'fix', 'GPS', 'Nsat'] 
-            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating
-                # df_despiked = despikeThis(s5_df,5) #despike doesn't work unless it's a columns of all number
+            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating                
                 sigma_sb = 5.67*(10**(-8))                
                 IRt = s5_df['IR'] + sigma_sb*(s5_df['TIR']+273.15)**4
                 s5_df['IRt'] = IRt
@@ -179,8 +176,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                             'bat_volt','pannel_T', 'T1', 'T2','TIR',
                             'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                             'fix', 'GPS', 'Nsat'] 
-            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating
-                # df_despiked = despikeThis(s5_df,5) #despike doesn't work unless it's a columns of all number
+            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating            
                 sigma_sb = 5.67*(10**(-8))                
                 IRt = s5_df['IR'] + sigma_sb*(s5_df['TIR']+273.15)**4
                 s5_df['IRt'] = IRt
@@ -205,8 +201,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                             'bat_volt','pannel_T', 'T1', 'T2','TIR',
                             'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                             'fix', 'GPS', 'Nsat'] 
-            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating
-                # df_despiked = despikeThis(s5_df,5) #despike doesn't work unless it's a columns of all number
+            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating                
                 sigma_sb = 5.67*(10**(-8))                
                 IRt = s5_df['IR'] + sigma_sb*(s5_df['TIR']+273.15)**4
                 s5_df['IRt'] = IRt
@@ -227,8 +222,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                             'bat_volt','pannel_T', 'T1', 'T2','TIR',
                             'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                             'fix', 'GPS', 'Nsat'] 
-            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating
-                # df_despiked = despikeThis(s5_df,5) #despike doesn't work unless it's a columns of all number
+            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating                
                 sigma_sb = 5.67*(10**(-8))                
                 IRt = s5_df['IR'] + sigma_sb*(s5_df['TIR']+273.15)**4
                 s5_df['IRt'] = IRt
@@ -249,8 +243,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                             'bat_volt','pannel_T', 'T1', 'T2','TIR',
                             'p_air', 'RH1', 'RH2', 'SW', 'IR', 'IR_ratio', 
                             'fix', 'GPS', 'Nsat'] 
-            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating
-                # df_despiked = despikeThis(s5_df,5) #despike doesn't work unless it's a columns of all number
+            if len(s5_df)>= (0.75*(1*60*20)): #making sure there is at least 75% of a complete file before interpolating                
                 sigma_sb = 5.67*(10**(-8))                
                 IRt = s5_df['IR'] + sigma_sb*(s5_df['TIR']+273.15)**4
                 s5_df['IRt'] = IRt
@@ -281,3 +274,9 @@ print(end)
 
 
 print('done with running level0_p5')
+
+
+
+
+
+

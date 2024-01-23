@@ -11,21 +11,40 @@ Created on Fri Jun 10 08:54:35 2022
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
+Part 1:
+This is Level 0 pipeline for port 3 (sonic anemometer #3): taking quality controlled Level00 data, 
+making sure there is enough 'good' data, aligning it to the wind (for applicable sensors) then despiking 
+it (aka getting rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
+Edited files are saved to the Level1_align-interp folder as .csv files.                                                                                          
 
-This is Level 0 pipeline: taking quality controlled Level00 data, making sure there is enough
-'good' data, aligning it to the wind (for applicable sensors) then despiking it (aka getting 
-rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
-Edited files are saved to the Level 1 folder, in their respective "port" sub-folder as .csv 
-files.                                                                                          
-
+Input file location:
+    code_pipeline/Level1_errorLinesRemoved
 INPUT files:
-    .txt files per 20 min period per port from Level1_errorLinesRemoved and sub-port folder
+    .txt files per 20 min period per instrument-port 
+
+Output file location:
+    Part 1: code_pipeline/Level1_align-interp
 OUPUT files:
-    .csv files per 20 min period per port into LEVEL_1 folder
+    .csv files per 20 min period per instrument-port 
     wind has been aligned to mean wind direction
-    files have been despiked and interpolated to all be the same size
+    files have been interpolated to all be the same size
     all units the same as the input raw units
+
+    
+Part 2:
+We take the edited (aligned, interpolated) mean data that we have saved as lists for each variable, and then we assign
+them to a data frame. In this data frame, each line is the mean of a 20 minute period.
+The dataframe is then saved to the Level2 folder as a .csv file.
+
+Input file location:
+    this code
+INPUT files:
+    lists from part 1
+
+Output file location:
+    code_pipeline/Level2
+OUPUT files:
+    s3_turbulenceTerms_andMore_combined.csv
     
     
 """
@@ -116,7 +135,7 @@ def despikeThis(input_df,n_std):
 # returns: output_df
 print('done with despike_this function')
 #%%
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
 filename_generalDate = []
 filename_port1 = []
@@ -155,9 +174,10 @@ print('port 4 length = '+ str(len(filename_port4)))
 print('port 5 length = '+ str(len(filename_port5)))
 print('port 6 length = '+ str(len(filename_port6)))
 print('port 7 length = '+ str(len(filename_port7)))
-#%% THIS CODE ALIGNS, INTERPOLATES, THEN DESPIKES THE RAW DATA W/REMOVED ERR LINES
-# filepath= r"E:\ASIT-research\BB-ASIT\test_Level1_errorLinesRemoved"
-# filepath= r"E:\ASIT-research\BB-ASIT\Level1_errorLinesRemoved"
+#%% THIS CODE ALIGNS, AND INTERPOLATES THE RAW DATA W/REMOVED ERR LINES
+'''
+PART 1
+'''
 
 start=datetime.datetime.now()
 
@@ -175,14 +195,10 @@ U_horiz_bar_s3_arr = []
 U_streamwise_bar_s3_arr = []
 
 
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
-# filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
 
-# path_save = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-# path_save = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-path_save = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/"
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+path_save = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/"
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
@@ -267,8 +283,11 @@ print(end)
 
 
 #%%
-path_save_L4 = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level4/"
-path_save_L4 = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/"
+'''
+PART 2
+'''
+
+path_save_L2 = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/"
 
 Ubar_s3_arr = np.array(Ubar_s3_arr)
 U_horiz_s3_arr = np.array(U_horiz_bar_s3_arr)
@@ -296,7 +315,7 @@ combined_s3_df['WpTp_bar_s3'] = WpTp_bar_s3_arr
 combined_s3_df['WpEp_bar_s3'] = WpEp_bar_s3_arr
 combined_s3_df['TKE_bar_s3'] = TKE_bar_s3_arr
 
-combined_s3_df.to_csv(path_save_L4 + "s3_turbulenceTerms_andMore_combined.csv")
+combined_s3_df.to_csv(path_save_L2 + "s3_turbulenceTerms_andMore_combined.csv")
 
 
 print('done fully with level0_p3')

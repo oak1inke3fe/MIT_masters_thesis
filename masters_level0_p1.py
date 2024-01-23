@@ -32,19 +32,17 @@ OUPUT files:
 
     
 Part 2:
-We take the edited (aligned, interpolated )
-This is Level 0 pipeline for port 1 (sonic anemometer #1): taking quality controlled Level00 data, 
-making sure there is enough 'good' data, aligning it to the wind (for applicable sensors) then despiking 
-it (aka getting rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
-Edited files are saved to the Level1_align-despike-interp folder as .csv files.                                                                                          
+We take the edited (aligned, interpolated) mean data that we have saved as lists for each variable, and then we assign
+them to a data frame. In this data frame, each line is the mean of a 20 minute period.
+The dataframe is then saved to the Level2 folder as a .csv file.
 
 Input file location:
-    code_pipeline/Level1_errorLinesRemoved
+    this code
 INPUT files:
-    .txt files per 20 min period per instrument-port 
+    lists from part 1
 
 Output file location:
-    code_pipeline/Level4
+    code_pipeline/Level2
 OUPUT files:
     s1_turbulenceTerms_andMore_combined.csv
     
@@ -180,7 +178,10 @@ print('port 6 length = '+ str(len(filename_port6)))
 print('port 7 length = '+ str(len(filename_port7)))
 
 
-#%% THIS CODE ALIGNS, INTERPOLATES, THEN DESPIKES THE RAW DATA W/REMOVED ERR LINES
+#%% THIS CODE ALIGNS, AND INTERPOLATES THE RAW DATA W/REMOVED ERR LINES
+'''
+PART 1
+'''
 
 
 start=datetime.datetime.now()
@@ -295,8 +296,11 @@ print(end)
 
 
 #%%
+'''
+PART 2
+'''
 
-path_save_L4 = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/"
+path_save_L2 = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/"
 
 Ubar_s1_arr = np.array(Ubar_s1_arr)
 U_horiz_s1_arr = np.array(U_horiz_bar_s1_arr)
@@ -324,7 +328,7 @@ combined_s1_df['WpTp_bar_s1'] = WpTp_bar_s1_arr
 combined_s1_df['WpEp_bar_s1'] = WpEp_bar_s1_arr
 combined_s1_df['TKE_bar_s2'] = TKE_bar_s1_arr
 
-combined_s1_df.to_csv(path_save_L4 + "s1_turbulenceTerms_andMore_combined.csv")
+combined_s1_df.to_csv(path_save_L2 + "s1_turbulenceTerms_andMore_combined.csv")
 
 
 print('done')

@@ -11,23 +11,26 @@ Created on Fri Jun 10 08:54:35 2022
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
 
-This is Level 0 pipeline: taking quality controlled Level00 data, making sure there is enough
-'good' data, aligning it to the wind (for applicable sensors) then despiking it (aka getting 
-rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
-Edited files are saved to the Level 1 folder, in their respective "port" sub-folder as .csv 
-files.                                                                                          
+This is Level 0 pipeline for the LiDAR recored on Port 7: 
+In this file, we are taking quality controlled Level00 data, making sure there is enough 'good' 
+data, and then interpolating to the correct sensor sampling frequency. Edited files are saved 
+to the Level1_align-interp folder.
 
+Input file location:
+    code_pipeline/Level1_errorLinesRemoved
 INPUT files:
-    .txt files per 20 min period per port from Level1_errorLinesRemoved and sub-port folder
+    .txt files per 20 min period per instrument-port 
+
+Output file location:
+    code_pipeline/Level1_align-interp
 OUPUT files:
-    .csv files per 20 min period per port into LEVEL_1 folder
-    wind has been aligned to mean wind direction
-    files have been despiked and interpolated to all be the same size
-    all units the same as the input raw units
+    .csv files per 20 min period per instrument-port 
+    wind has been aligned to mean wind direction (if applicable)
+    files have been interpolated to all be the same size 
     
     
+
 """
 #%%
 import numpy as np
@@ -51,8 +54,9 @@ def interp_lidar(df_lidar):
 print('done with interp_lidar function')
 
 #%%
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filename_generalDate = []
 filename_port1 = []
 filename_port2 = []
@@ -61,7 +65,7 @@ filename_port4 = []
 filename_port5 = []
 filename_port6 = []
 filename_port7 = []
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
@@ -90,20 +94,19 @@ print('port 4 length = '+ str(len(filename_port4)))
 print('port 5 length = '+ str(len(filename_port5)))
 print('port 6 length = '+ str(len(filename_port6)))
 print('port 7 length = '+ str(len(filename_port7)))
-#%% THIS CODE ALIGNS, INTERPOLATES, THEN DESPIKES THE RAW DATA W/REMOVED ERR LINES
-# filepath= r"E:\ASIT-research\BB-ASIT\test_Level1_errorLinesRemoved"
-# filepath= r"E:\ASIT-research\BB-ASIT\Level1_errorLinesRemoved"
+#%% THIS CODE ALIGNS, AND INTERPOLATES THE RAW DATA W/REMOVED ERR LINES
+
 
 start=datetime.datetime.now()
 
 len_dfOutput = []
 port7_singleFile_nans_sum = []
 
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
-# path_save = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-path_save = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+
+path_save = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_align-interp/"
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
@@ -111,17 +114,10 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
         port7_singleFile_nans = []
         if filename.startswith('mNode_Port7'):
             filename_only = filename[:-4]
-            # path_save = r"E:\ASIT-research\BB-ASIT\test_Level1_align-despike-interp/"
+            
             s7_df = pd.read_csv(file,index_col=None, header = None)
-            s7_df.columns =['range','amplitude','quality']
-            # df_despiked = pd.DataFrame()
+            s7_df.columns =['range','amplitude','quality']            
             if s7_df['range'].isna().sum()<(0.50*(1*60*20)): #make sure at least 50% of 20 minutes (at 1Hz frequency because of wave dropout) is recorded
-                # s7_df = s7_df['all'].str.split(';', expand=True) #now separate into different columns
-                # s7_df.columns =['range','amplitude','quality'] # name the columns
-                # s7_df['range'] = s7_df['range'].str.lstrip('r') #get rid of leading 'r' in range column
-                # s7_df['amplitude'] = s7_df['amplitude'].str.lstrip('a') #get rid of leading 'a' in amplitude column
-                # s7_df['quality'] = s7_df['quality'].str.lstrip('q') #get rid of leading 'q' in quality column
-                # df_despiked = despikeThis(s7_df,5)
                 s7_df_interp = interp_lidar(s7_df) #interpolate to Lidar's sampling frequency
                 port7_singleFile_nans_i=0
                 port7_singleFile_nans.append(port7_singleFile_nans_i)
@@ -132,7 +128,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                 port7_singleFile_nans.append(port7_singleFile_nans_i)
             port7_singleFile_nans_sum_i = sum(port7_singleFile_nans)
             port7_singleFile_nans_sum.append(port7_singleFile_nans_i)
-            # s7_df_interp.to_csv(path_save+str(filename_only)+'_1.csv') #save as csv
+            s7_df_interp.to_csv(path_save+str(filename_only)+'_1.csv') #save as csv
             print('Port 7 ran for file: '+ filename)
             len_file = len(s7_df_interp)
             len_dfOutput.append(len_file)
