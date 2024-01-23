@@ -36,4 +36,6 @@ To get started with the project, Run the following code in this order:
 
 Then, you can explore the other files, particularly the masters_UniversalFunctions.py and masters_PversusE_PW.py files.
 
+At the beginning of each code, there is a short description of the code purpose as well as input files/location and output files/locations that correspond to the code_pipeline folder, but in which you will need to rename to your exact filepath.
+
 
