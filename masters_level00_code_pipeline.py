@@ -15,12 +15,12 @@ need to be changed.
 Input file location: 
     this is the folder path of the folder containing the raw data
 Input files:
-    *.dat files (1 file per 20 min period per instrument)
+    *.dat files (1 file per 20 min period per instrument-port)
 
 Output file location: 
     code_pipeline/Level1_errorLinesRemoved
 Output files:
-    *.txt files (1 file per 20 min period per instrument)
+    *.txt files (1 file per 20 min period per instrument-port)
     plus sub-folder
     
 """

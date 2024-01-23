@@ -11,21 +11,42 @@ Created on Fri Jun 10 08:54:35 2022
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
+Part 1:
+This is Level 0 pipeline for port 1 (sonic anemometer #1): taking quality controlled Level00 data, 
+making sure there is enough 'good' data, aligning it to the wind (for applicable sensors) then despiking 
+it (aka getting rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
+Edited files are saved to the Level1_align-interp folder as .csv files.                                                                                          
 
-This is Level 0 pipeline: taking quality controlled Level00 data, making sure there is enough
-'good' data, aligning it to the wind (for applicable sensors) then despiking it (aka getting 
-rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
-Edited files are saved to the Level 1 folder, in their respective "port" sub-folder as .csv 
-files.                                                                                          
-
+Input file location:
+    code_pipeline/Level1_errorLinesRemoved
 INPUT files:
-    .txt files per 20 min period per port from Level1_errorLinesRemoved and sub-port folder
+    .txt files per 20 min period per instrument-port 
+
+Output file location:
+    Part 1: code_pipeline/Level1_align-interp
 OUPUT files:
-    .csv files per 20 min period per port into LEVEL_1 folder
+    .csv files per 20 min period per instrument-port 
     wind has been aligned to mean wind direction
-    files have been despiked and interpolated to all be the same size
+    files have been interpolated to all be the same size
     all units the same as the input raw units
+
+    
+Part 2:
+We take the edited (aligned, interpolated )
+This is Level 0 pipeline for port 1 (sonic anemometer #1): taking quality controlled Level00 data, 
+making sure there is enough 'good' data, aligning it to the wind (for applicable sensors) then despiking 
+it (aka getting rid of the outliers), and finally interpolating it to the correct sensor sampling frequency. 
+Edited files are saved to the Level1_align-despike-interp folder as .csv files.                                                                                          
+
+Input file location:
+    code_pipeline/Level1_errorLinesRemoved
+INPUT files:
+    .txt files per 20 min period per instrument-port 
+
+Output file location:
+    code_pipeline/Level4
+OUPUT files:
+    s1_turbulenceTerms_andMore_combined.csv
     
     
 """
@@ -116,10 +137,10 @@ def despikeThis(input_df,n_std):
 # returns: output_df
 print('done with despike_this function')
 #%%
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
-# filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
 
+#checking that there are the same amount of files per port
 filename_generalDate = []
 filename_port1 = []
 filename_port2 = []
@@ -128,14 +149,14 @@ filename_port4 = []
 filename_port5 = []
 filename_port6 = []
 filename_port7 = []
-for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
+for root, dirnames, filenames in os.walk(filepath): 
     for filename in natsort.natsorted(filenames):
         file = os.path.join(root, filename)
         filename_only = filename[:-4]
         fiilename_general_name_only = filename[12:-4]
         if filename.startswith("mNode_Port1"):
             filename_port1.append(filename_only)
-            filename_generalDate.append(fiilename_general_name_only)
+            filename_generalDate.append(fiilename_general_name_only) #gives us just the date-time of the file
         if filename.startswith("mNode_Port2"):
             filename_port2.append(filename_only)
         if filename.startswith("mNode_Port3"):
@@ -157,9 +178,10 @@ print('port 4 length = '+ str(len(filename_port4)))
 print('port 5 length = '+ str(len(filename_port5)))
 print('port 6 length = '+ str(len(filename_port6)))
 print('port 7 length = '+ str(len(filename_port7)))
+
+
 #%% THIS CODE ALIGNS, INTERPOLATES, THEN DESPIKES THE RAW DATA W/REMOVED ERR LINES
-# filepath= r"E:\ASIT-research\BB-ASIT\test_Level1_errorLinesRemoved"
-# filepath= r"E:\ASIT-research\BB-ASIT\Level1_errorLinesRemoved"
+
 
 start=datetime.datetime.now()
 
@@ -175,15 +197,9 @@ U_horiz_bar_s1_arr = []
 U_streamwise_bar_s1_arr = []
 TKE_bar_s1_arr = []
 
-
-
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
-# filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
 
-# path_save = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-# path_save = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-path_save = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/"
+path_save = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/"
 
 for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
     for filename in natsort.natsorted(filenames):
@@ -196,22 +212,13 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                 s1_df = s1_df[['u', 'v', 'w', 'T',]]            
                 s1_df['u']=s1_df['u'].astype(float) 
                 s1_df['v']=s1_df['v'].astype(float)            
-                s1_df['u']=-1*s1_df['u']
-                s1_df['w']=-1*s1_df['w']
+                s1_df['u']=-1*s1_df['u'] # our sonic 1 (on port 1) pointed downwards, so we multiply u and w by -1
+                s1_df['w']=-1*s1_df['w'] # our sonic 1 (on port 1) pointed downwards, so we multiply u and w by -1
                 df_s1_aligned = alignwind(s1_df)
-                df_s1_aligned['Ur'][np.abs(df_s1_aligned['Ur']) >=55 ] = np.nan
-                df_s1_aligned['Vr'][np.abs(df_s1_aligned['Vr']) >=20 ] = np.nan
-                df_s1_aligned['Wr'][np.abs(df_s1_aligned['Wr']) >=20 ] = np.nan                            
-                df_s1_interp = interp_sonics123(df_s1_aligned)
-                # Ur_s1 = df_s1_interp['Ur']
-                # Ur_s1_outlier_in_Ts = hampel(Ur_s1, window_size=10, n=3, imputation=True) # Outlier Imputation with rolling median
-                # df_s1_interp['Ur'] = Ur_s1_outlier_in_Ts
-                # Vr_s1 = df_s1_interp['Vr']
-                # Vr_s1_outlier_in_Ts = hampel(Vr_s1, window_size=10, n=3, imputation=True) # Outlier Imputation with rolling median
-                # df_s1_interp['Vr'] = Vr_s1_outlier_in_Ts
-                # Wr_s1 = df_s1_interp['Wr']
-                # Wr_s1_outlier_in_Ts = hampel(Wr_s1, window_size=10, n=3, imputation=True) # Outlier Imputation with rolling median
-                # df_s1_interp['Wr'] = Wr_s1_outlier_in_Ts
+                df_s1_aligned['Ur'][np.abs(df_s1_aligned['Ur']) >=55 ] = np.nan #this is a "reasonable value threshold"
+                df_s1_aligned['Vr'][np.abs(df_s1_aligned['Vr']) >=20 ] = np.nan #this is a "reasonable value threshold"
+                df_s1_aligned['Wr'][np.abs(df_s1_aligned['Wr']) >=20 ] = np.nan #this is a "reasonable value threshold"                           
+                df_s1_interp = interp_sonics123(df_s1_aligned) #interpolate the files using the function that matches the correct sonic
                 U_horiz_s1 = np.sqrt((np.array(df_s1_interp['Ur'])**2)+(np.array(df_s1_interp['Vr'])**2))
                 U_streamwise_s1 = np.sqrt((np.array(df_s1_interp['Ur'])**2)+(np.array(df_s1_interp['Vr'])**2)+(np.array(df_s1_interp['Wr'])**2))
                 Up_s1 = df_s1_interp['Ur']-df_s1_interp['Ur'].mean()
@@ -219,18 +226,18 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                 Wp_s1 = df_s1_interp['Wr']-df_s1_interp['Wr'].mean()
                 Tp_s1 = (df_s1_interp['T']+273.15)-(df_s1_interp['T']+273.15).mean()
                 TKEp_s1 = 0.5*((Up_s1**2)+(Vp_s1**2)+(Wp_s1**2))                
-                Tbar_s1 = (df_s1_interp['T']+273.15).mean()
+                Tbar_s1 = (df_s1_interp['T']+273.15).mean() #put temp in Kelvin
                 UpWp_bar_s1 = np.nanmean(Up_s1*Wp_s1)
                 VpWp_bar_s1 = np.nanmean(Vp_s1*Wp_s1)
                 WpTp_bar_s1 = np.nanmean(Tp_s1*Wp_s1)
                 WpEp_bar_s1 = np.nanmean(TKEp_s1*Wp_s1)
                 Ubar_s1 = df_s1_interp['Ur'].mean()
                 Umedian_s1 = df_s1_interp['Ur'].median()
-                Tmedian_s1 = (df_s1_interp['T']+273.15).median()
+                Tmedian_s1 = (df_s1_interp['T']+273.15).median() #put temp in Kelvin
                 TKE_bar_s1 = np.nanmean(TKEp_s1)
                 U_horiz_bar_s1 = np.nanmean(U_horiz_s1)
                 U_streamwise_bar_s1 = np.nanmean(U_streamwise_s1)
-            else:
+            else: #if there is less than 75% of the data, then make the file NaN
                 df_s1_interp = pd.DataFrame(np.nan, index=[0,1], columns=['base_index','Ur','Vr','Wr','T','u','v','w','alpha','beta'])
                 Tbar_s1 = np.nan
                 UpWp_bar_s1 = np.nan
@@ -243,6 +250,7 @@ for root, dirnames, filenames in os.walk(filepath): #this is for looping through
                 TKE_bar_s1 = np.nan
                 U_horiz_bar_s1 = np.nan
                 U_streamwise_bar_s1 = np.nan
+            #append the lines
             Tbar_s1_arr.append(Tbar_s1)
             UpWp_bar_s1_arr.append(UpWp_bar_s1)
             VpWp_bar_s1_arr.append(VpWp_bar_s1)
@@ -287,7 +295,7 @@ print(end)
 
 
 #%%
-# path_save_L4 = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level4/"
+
 path_save_L4 = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/"
 
 Ubar_s1_arr = np.array(Ubar_s1_arr)
