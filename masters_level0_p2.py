@@ -120,28 +120,7 @@ def interp_sonics123(df_sonics123):
 ### function end
 # returns: df_align_interp
 print('done with interp_sonics123 simple function')
-#%%
-### function start
-#######################################################################################
-def despikeThis(input_df,n_std):
-    n = input_df.shape[1]
-    output_df = pd.DataFrame()
-    for i in range(0,n):
-        elements_input = input_df.iloc[:,i]
-        elements = elements_input
-        mean = np.mean(elements)
-        sd = np.std(elements)
-        extremes = np.abs(elements-mean)>(n_std*sd)
-        elements[extremes]=np.NaN
-        despiked = np.array(elements)
-        colname = input_df.columns[i]
-        output_df[str(colname)]=despiked
 
-    return output_df
-#######################################################################################
-### function end
-# returns: output_df
-print('done with despike_this function')
 #%%
 
 filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/"
