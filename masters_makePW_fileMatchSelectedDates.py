@@ -8,11 +8,15 @@ Created on Thu Nov 30 09:20:34 2023
 
 This file is used to pad and/or restrict the PW dataset to the correct start/end dates of the spring/fall start and end dates
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     rhoAvg_CombinedAnalysis.csv
     date_combinedAnalysis.csv
     pw4oak.csv
-    
+
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     pw_combinedAnalysis.csv
 
@@ -28,7 +32,7 @@ print('done with imports')
 
 #%%
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 rho_df = pd.read_csv(file_path + 'rhoAvg_CombinedAnalysis.csv')
 date_df = pd.read_csv(file_path + 'date_combinedAnalysis.csv')
 spring_start = date_df['datetime'][0]

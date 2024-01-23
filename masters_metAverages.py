@@ -6,15 +6,16 @@ Created on Wed Oct  5 14:17:58 2022
 @author: oaklin keefe
 
 
-NOTE: this file needs to be run on the remote desktop.
-
 This file is used to calculate the 20min file averages of the port5 meteorological variables:
     temp, relative humidity, air pressure, shortwave radiation, longwave radiation
 
+Input file location:
+    /code_pipeline/Level1_align-interp/
 INPUT files:
-    port5/sonic 5 files from /Level1_align-despike-interp/ folder
+    port5/sonic 5 files
 
-    
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     metAvg_CombinedAnalysis.csv
     
@@ -28,7 +29,7 @@ import natsort
 
 print('done with imports')
 #%%
-filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/"
+filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/"
 met_df_test = pd.read_csv(filepath + 'mNode_Port5_20220510_000000_1.csv')
 print(met_df_test.columns)
 #%%
@@ -93,6 +94,6 @@ met_avg_df['p_air [Pa]']=p_air_avg/100  #convert to Pascals
 
 print('done with creating dataframe of all averaged met variables')
 #%% save this file where the other files we are pulling from will come from
-path_save = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+path_save = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 met_avg_df.to_csv(path_save+"metAvg_CombinedAnalysis.csv")
 print('file saved')

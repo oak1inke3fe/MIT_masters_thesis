@@ -8,6 +8,8 @@ Created on Fri May  5 17:42:19 2023
 
 This file is used to calculate the virtual potential temperature.
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
@@ -15,7 +17,8 @@ INPUT files:
     despiked_s4_turbulenceTerms_andMore_combined.csv
     parosAvg_combinedAnalysis.csv
 
-    
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     thetaV_combinedAnalysis.csv
         
@@ -30,7 +33,7 @@ import matplotlib.pyplot as plt
 print('done with imports')
 
 #%%
-file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 sonic_file1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)
 sonic1_df = sonic1_df.drop(['new_index'], axis=1)

@@ -5,8 +5,11 @@ Created on Tue Feb 14 12:36:06 2023
 @author: oaklin keefe
 
 
-This file is used to analyze the production, dissipation, buoyancy terms of the TKE budget equation.
+This file is used to analyze the production, dissipation, and buoyancy terms of the TKE budget equation.
+There are options to perform this analysis with on-shore wind conditions as well as off-shore (see commented out sections of the code)
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     prodTerm_combinedAnalysis.csv
     epsU_terms_combinedAnalysis_MAD_k_UoverZbar.csv
@@ -15,9 +18,10 @@ INPUT files:
     z_airSide_allFall.csv
     ZoverL_combinedAnalysis.csv
     usr_combinedAnalysis.csv
-    
-    
-    
+      
+
+Output file location:
+    /code_pipeline/Level2/    
 OUTPUT files:
     Only figures:
         
@@ -32,12 +36,10 @@ import seaborn as sns
 
 print('done with imports')
 #%%
-# file_path = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level4/"
-# file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-# plot_savePath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level4\plots/"
-# plot_savePath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/plots/'
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+
+plot_savePath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
 sonic_file1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)

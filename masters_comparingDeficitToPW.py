@@ -8,6 +8,8 @@ Created on Tue Dec 12 13:47:11 2023
 
 This file is used to compare the dissipation deficit (P+B-Epsilon) to wave-coherent pressure-work
 
+Input file location:
+    code_pipeline/Level2
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
@@ -29,7 +31,8 @@ We also set:
     base_index= 3959 as the last point in the spring deployment to separate spring and fall datasets so the hampel filter is not 
     corrupted by data that is not in consecutive time sequence.
 
-    
+Output file location:
+    code_pipeline/Level2
 OUTPUT plots:
     mayStorm_despike31dissipationDeficit_comparisonWithPW.png
     mayStorm_despike32dissipationDeficit_comparisonWithPW.png
@@ -41,14 +44,12 @@ OUTPUT plots:
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import binsreg
-import seaborn as sns
 from hampel import hampel
 
 print('done with imports')
 #%%
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+plot_savePath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
 sonic_file1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)

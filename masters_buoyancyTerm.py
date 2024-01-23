@@ -9,6 +9,8 @@ Created on Mon Oct 23 10:37:44 2023
 This file is used to caculate the buoyancy term in the TKE budget equation given initial inputs of the variables
 included in the term.
 
+Input file location:
+    code_pipeline/Level2/
 These initial variables (<w'T'>, <T>, density (rho)  are found in the INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
@@ -20,6 +22,8 @@ We also set:
     g= 9.81 [m/s^2] #gravitational acceleration
     cp = 1004.67 [J/kg/K] #specific heat of dry air at constant pressure 
     
+Output file location:
+    code_pipeline/Level2/
 The OUTPUT file is one files with all the buoyancy terms per sonic combined into one dataframe (saved as a .csv):
     buoy_terms_combinedAnalysis.csv
 
@@ -27,14 +31,13 @@ The OUTPUT file is one files with all the buoyancy terms per sonic combined into
 
 
 #%%
-import numpy as np
+
 import pandas as pd
-import matplotlib.pyplot as plt
 
 print('done with imports')
 #%%
-# file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+
 sonic1_df = pd.read_csv(file_path + 'despiked_s1_turbulenceTerms_andMore_combined.csv')
 sonic2_df = pd.read_csv(file_path + 'despiked_s2_turbulenceTerms_andMore_combined.csv')
 sonic3_df = pd.read_csv(file_path + 'despiked_s3_turbulenceTerms_andMore_combined.csv')

@@ -6,12 +6,16 @@ Created on Mon Oct 23 13:07:04 2023
 @author: oaklin keefe
 This file is used to calculate ustar, (u*) also known as friction velocity.
 
+Input file locations:
+    /code_pipeline/Level2/
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
     despiked_s3_turbulenceTerms_andMore_combined.csv
     despiked_s4_turbulenceTerms_andMore_combined.csv
-    
+
+Output file location: 
+    /code_pipeline/Level2/
 OUTPUT files:
     usr_combinedAnalysis.csv
     a plot of u* versus wind speed
@@ -25,8 +29,7 @@ import matplotlib.pyplot as plt
 print('done with imports')
 
 #%%
-# file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
 date_df = pd.read_csv(file_path + 'date_combinedAnalysis.csv')
 
@@ -120,7 +123,7 @@ plt.ylabel('$u_*$ [$ms^{-1}$]')
 plt.ylim(0,1)
 plt.xlim(2,17)
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
+plot_savePath = file_path
 plt.savefig(plot_savePath + "scatter_uStar_v_windSpeed.png",dpi=300)
 plt.savefig(plot_savePath + "scatter_uStar_v_windSpeed.pdf")
 print('done with plot')

@@ -8,6 +8,8 @@ Created on Fri Oct 20 15:02:34 2023
 
 This file is used to despike the sonic observations using a Hampel filter.
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     s1_turbulenceTerms_andMore_combined.csv
     s2_turbulenceTerms_andMore_combined.csv
@@ -18,7 +20,8 @@ We also set:
     base_index= 3959 as the last point in the spring deployment to separate spring and fall datasets so the hampel filter is not 
     corrupted by data that is not in consecutive time sequence.
 
-    
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
@@ -36,15 +39,14 @@ import matplotlib.pyplot as plt
 print('done with imports')
 
 #%%
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
 sonic_file1 = "s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)
 sonic1_df = sonic1_df.drop(['Unnamed: 0'], axis=1)
 # print(sonic1_df.columns)
 
 #rename the columns to be the same for each dataframe so that the hampel filter loop is easier to execute
-
 sonic1_df = sonic1_df.rename(columns={'Ubar_s1': 'Ubar', 
                                       'U_horiz_s1': 'U_horiz',
                                       'U_streamwise_s1':'U_streamwise',
@@ -115,7 +117,7 @@ plt.title('Ubar before hampel despike')
 
 
 # From the plot above, we see we have included variable wind speeds (less than 2m/s)
-# so here, we will get rid of values because they are variable wind speeds
+# so here, we will get rid of the variable wind speeds (less than 2m/s)
 index_array = np.arange(len(sonic1_df))
 sonic1_df['new_index_arr'] = np.where((sonic1_df['Ubar'])> 2, np.nan, index_array)
 sonic2_df['new_index_arr'] = np.where((sonic2_df['Ubar'])> 2, np.nan, index_array)
@@ -176,6 +178,7 @@ column_arr = ['Ubar', 'U_horiz', 'U_streamwise', 'Umedian',
               'UpWp_bar', 'VpWp_bar', 'WpTp_bar', 'WpEp_bar',
               'TKE_bar']
 
+#run hampel filter over each column in the dataframe
 for i in range(len(sonics_df_arr_spring)):
 # for sonic in sonics_df_arr:
     for column_name in column_arr:
@@ -234,6 +237,8 @@ sonics_despike_arr_fall = [sonic1_df_despiked_fall,
                            sonic2_df_despiked_fall, 
                            sonic3_df_despiked_fall, 
                            sonic4_df_despiked_fall]
+
+#run hampel filter over each column in the dataframe
 for i in range(len(sonics_df_arr_fall)):
     for column_name in column_arr:
     

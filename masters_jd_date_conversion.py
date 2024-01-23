@@ -4,13 +4,15 @@ Created on Thu Sep 14 15:48:32 2023
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
 
 This file is used to create a file of julien dates for COARE, and then a file of normal date formats to be used for other code
-
+Input file location:
+    /code_pipeline/Level1_errorLinesRemoved/
 INPUT files:
-    port1/sonic1 files from /Level1_errorLinesRemoved/ folder
+    port1/sonic1 files 
 
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     jd_combinedAnalysis.csv
     date_combinedAnalysis.csv
@@ -26,7 +28,7 @@ import natsort
 
 print('done with imports')
 #%%
-# filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level1_errorLinesRemoved"
+
 filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_errorLinesRemoved/'
 filename_generalDate = []
 filename_port1 = []
@@ -92,13 +94,13 @@ jd_df = pd.DataFrame()
 jd_df['jd'] = jd
 jd_df['old_date'] = filename_generalDate
 
-path_save_jd = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+path_save_jd = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 jd_df.to_csv(path_save_jd + 'jd_combinedAnalysis.csv')
 print('done')
 print(jd_df.head(16))
 
 #%%
-file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 jd_df = pd.read_csv(file_path+"jd_combinedAnalysis.csv")
 #%%
 old_date_arr = np.array(jd_df['old_date'])

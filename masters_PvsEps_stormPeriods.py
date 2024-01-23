@@ -9,7 +9,10 @@ Created on Thu Nov 30 15:51:57 2023
 This file is used to analyze the production, dissipation, buoyancy, and wave-coherent pw terms of the TKE budget equation for specific high-wind events
 with large dissipation deficits
 
+There are options to perform this analysis with on-shore wind conditions as well as off-shore (see commented out sections of the code)
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     prodTerm_combinedAnalysis.csv
     epsU_terms_combinedAnalysis_MAD_k_UoverZbar.csv
@@ -20,7 +23,8 @@ INPUT files:
     usr_combinedAnalysis.csv
     
     
-    
+Output file location:
+    /code_pipeline/Level2/    
 OUTPUT files:
     Only figures:
         
@@ -37,8 +41,8 @@ import matplotlib.pyplot as plt
 print('done with imports')
 #%%
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+plot_savePath = file_path
 
 sonic_file1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)
@@ -345,7 +349,6 @@ plt.legend()
 plt.ylim(-0.2,0.2)
 plt.xlabel('time index')
 plt.ylabel('$P-\epsilon$ [m^2/s^3]')
-# plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis')
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.png", dpi = 300)
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.pdf")
 plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis \n for $\overline{u}$ sonic1 >=8m/s')
@@ -364,7 +367,6 @@ plt.ylim(-0.01,0.1)
 plt.xlim(1600,1745)
 plt.xlabel('time index')
 plt.ylabel('$P-\epsilon$ [m^2/s^3]')
-# plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis')
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.png", dpi = 300)
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.pdf")
 plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis \n for Period1: May Storm')
@@ -419,7 +421,6 @@ plt.ylim(-0.01,0.1)
 plt.xlim(4580,4784)
 plt.xlabel('time index')
 plt.ylabel('$P-\epsilon$ [m^2/s^3]')
-# plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis')
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.png", dpi = 300)
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.pdf")
 plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis \n for Period2: October Storm')
@@ -470,7 +471,6 @@ plt.plot(np.arange(len(windDir_df_period2)), windDir_df_period2['alpha_s4'], col
 plt.legend()
 plt.xlabel('time index')
 plt.ylabel('wind direction')
-# plt.title('Neutral Conditions: $P-\epsilon$ Combined Analysis')
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.png", dpi = 300)
 # plt.savefig(plot_savePath + "timeseries_neutralPvEps.pdf")
 plt.title('Neutral Conditions: Wind direction per period of high wind')
@@ -679,64 +679,6 @@ print(r_II_PB_str)
 print(r_III_PB_str)
 
 
-#%% Correlation coefficients of Eps from Puu spectra (U) versus Pww spectra (W)
-# Eps_comparison_df = pd.DataFrame()
-# Eps_comparison_df['LI_U'] = np.array(eps_df['eps_LI'])
-# Eps_comparison_df['LI_fW'] = np.array(epsW_df['eps_LI'])
-# Eps_comparison_df['LII_U'] = np.array(eps_df['eps_LII'])
-# Eps_comparison_df['LII_fW'] = np.array(epsW_df['eps_LII'])
-# Eps_comparison_df['LIII_U'] = np.array(eps_df['eps_LIII'])
-# Eps_comparison_df['LIII_fW'] = np.array(epsW_df['eps_LIII'])
-
-# r_epsComparison = Eps_comparison_df.corr()
-# print(r_epsComparison)
-# r_I_COMP_str = r_epsComparison['LI_U'][1]
-# r_I_COMP_str = round(r_I_COMP_str, 3)
-# r_II_COMP_str = r_epsComparison['LII_U'][3]
-# r_II_COMP_str = round(r_II_COMP_str, 3)
-# r_III_COMP_str = r_epsComparison['LIII_U'][5]
-# r_III_COMP_str = round(r_III_COMP_str, 3)
-# print(r_I_COMP_str)
-# print(r_II_COMP_str)
-# print(r_III_COMP_str)
-
-# plt.figure()
-# plt.scatter(eps_df.index, eps_df.eps_LI)
-# plt.xlim(2350,2400)
-
-
-
-#%% scatterplot of EpsU versus EpsW
-
-### previously: scatterplot of Eps_MAD vs. Eps Fixed frequency
-
-# fig = plt.figure()
-# plt.plot([0, 1], [0, 1], color = 'k', label = "1-to-1") #scale 1-to-1 line
-# plt.plot([10**-6,10], [10**-7,1], color = 'k', linestyle = '--', label = '+\- O10') #scale line by power of 10
-# plt.plot([10**-6,1], [10**-5,10],color = 'k', linestyle = '--') #scale line by power of 10
-# plt.scatter(prod_df['prod_III'], eps_df['eps_LIII'], color = 'skyblue', edgecolor = 'navy', label = 'level III')
-# plt.scatter(eps_MAD_df['eps_LII'], eps_df['eps_LII'], color = 'darkorange', edgecolor = 'red',label = 'level II')
-# plt.scatter(eps_MAD_df['eps_LI'], eps_df['eps_LI'], color = 'darkgreen', edgecolor = 'olive', label = 'level I')
-
-# # plt.scatter(np.abs(prod_df['prod_III']), np.abs(eps_df['eps_LIII']), color = 'skyblue', edgecolor = 'navy', label = 'level III')
-# # plt.scatter(np.abs(prod_df['prod_II']), np.abs(eps_df['eps_LII']), color = 'darkorange', edgecolor = 'red',label = 'level II')
-# # plt.scatter(np.abs(prod_df['prod_I']), np.abs(eps_df['eps_LI']), color = 'darkgreen', edgecolor = 'olive', label = 'level I')
-
-# plt.xscale('log')
-# plt.yscale('log')
-# plt.xlabel('Eps (<u>/<z>) ')
-# plt.ylabel('Eps (Fixed ISR) ')
-# plt.title('Neutral Conditions comparison of Epsilon Measurements')
-# plt.legend(loc = 'lower right')
-
-# # rI, pI = sp.stats.pearsonr(x=prod_df['prod_I'], y=eps_df['eps_LI'])
-# ax = plt.gca() 
-# plt.text(.05, .9, "Pearson's r L II ={:.3f}".format(r_III_str), transform=ax.transAxes)
-# plt.text(.05, .85, "Pearson's r L II ={:.3f}".format(r_II_COMP_str), transform=ax.transAxes)
-# plt.text(.05, .8, "Pearson's r L I ={:.3f}".format(r_I_COMP_str), transform=ax.transAxes)
-
-
-# print('done plotting P vs. Eps simple diss (new)')
 
 #%% NEUTRAL CONDITIONS
 # scatterplot of Production versus Dissipation SPRING

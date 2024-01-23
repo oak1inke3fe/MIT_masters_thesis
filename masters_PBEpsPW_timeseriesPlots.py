@@ -8,6 +8,8 @@ Created on Tue Dec  5 10:27:10 2023
 
 This file is used to make timeseries plots of production, dissipation rate, and buoyancy (and wave-coherent pressure-work)
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     prodTerm_combinedAnalysis.csv
     epsU_terms_combinedAnalysis_MAD_k_UoverZbar.csv
@@ -16,6 +18,8 @@ INPUT files:
     windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
     date_combinedAnalysis.csv
     
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     Only figures:
         timeseries_PBEps_Spring.png
@@ -35,8 +39,8 @@ import matplotlib.dates as mdates
 print('done with imports')
 #%%
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+plot_savePath = file_path
 
 prod_file = "prodTerm_combinedAnalysis.csv"
 prod_df = pd.read_csv(file_path+prod_file)

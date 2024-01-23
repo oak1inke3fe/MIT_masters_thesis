@@ -6,14 +6,18 @@ Created on Tue Dec  5 09:32:10 2023
 @author: oaklin keefe
 
 
-This file is used to make timeseries plots of 
+This file is used to make timeseries plots of roughness length (z0) versus drag coefficient (cD)
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     z0_combinedAnalysis.csv
     dragCoefficient_combinedAnalysis.csv
     windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
     date_combinedAnalysis.csv
     
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     Only figures:
         timeseries_z0cD_Spring.png
@@ -31,8 +35,8 @@ import matplotlib.dates as mdates
 print('done with imports')
 #%%
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+plot_savePath = file_path
 
 z0_file = "z0_combinedAnalysis.csv"
 z0_df = pd.read_csv(file_path+z0_file)

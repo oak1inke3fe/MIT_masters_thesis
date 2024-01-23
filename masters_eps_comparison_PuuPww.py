@@ -9,13 +9,16 @@ This file is used to compare the epsilon estimates from inertial dissipation met
 
 For a comparison, we use a Pearson r-correlation
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     epsU_terms_combinedAnalysis_MAD_k_UoverZbar.csv
     epsW_terms_combinedAnalysis_MAD_k_UoverZbar.csv
     
-    
+Output file location:
+    /code_pipeline/Level2/    
 OUTPUT files:
-    n/a; you may add lines to safe files/figures if needed
+    n/a; you may add lines to save files/figures if needed
 
 """
 
@@ -27,8 +30,7 @@ import matplotlib.pyplot as plt
 from hampel import hampel
 print('done with imports')
 #%%
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_save_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
 eps_UoverZ_Puu = pd.read_csv(file_path + "epsU_terms_combinedAnalysis_MAD_k_UoverZbar.csv")
 eps_UoverZ_Pww = pd.read_csv(file_path + "epsW_terms_combinedAnalysis_MAD_k_UoverZbar.csv")

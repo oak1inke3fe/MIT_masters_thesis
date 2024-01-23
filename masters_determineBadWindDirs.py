@@ -5,39 +5,48 @@ Created on Fri Oct 20 14:05:49 2023
 
 @author: oaklin keefe
 
-NOTE: step one of this file needs to be run on the remote desktop (the step where it says "for first time running").
 
 This file is used to determine "bad wind directions" where the wind direcion may cause turbulence to be formed from interaction with the tower or
 other tower components and that is unrelated to the flow if the tower was not present.
 
+Input file location:
+    part 1: /code_pipeline/Level1_align-interp/
+    part 2: /code_pipeline/Level2/
 INPUT files:
-    sonics files from Level1_align-despike-interp files (for first time running)
-    despiked_s1_turbulenceTerms_andMore_combined.csv
-    despiked_s2_turbulenceTerms_andMore_combined.csv
-    despiked_s3_turbulenceTerms_andMore_combined.csv
-    despiked_s4_turbulenceTerms_andMore_combined.csv
-    date_combinedAnalysis.csv
+    part 1:
+        sonics files (ports 1-4) from Level1_align-interp files 
+    part 2:
+        alpha_combinedAnalysis.csv
+        despiked_s1_turbulenceTerms_andMore_combined.csv
+        despiked_s2_turbulenceTerms_andMore_combined.csv
+        despiked_s3_turbulenceTerms_andMore_combined.csv
+        despiked_s4_turbulenceTerms_andMore_combined.csv
+        date_combinedAnalysis.csv
     
     
 We also set:
     base_index= 3959 as the last point in the spring deployment to separate spring and fall datasets so the hampel filter is not 
     corrupted by data that is not in consecutive time sequence.
 
-    
+Output file location:
+    part 1 and part 2:
+        /code_pipeline/Level2/
 OUTPUT files:
-    alpha_combinedAnalysis.csv (this is a file with all the wind directions between -180,+180 for the full spring/fall deployment. 0 degrees is
+    part 1:
+        alpha_combinedAnalysis.csv (this is a file with all the wind directions between -180,+180 for the full spring/fall deployment. 0 degrees is
                                 coming from the E, +/-180 is coming from the W, +90 is coming from the N, -90 is coming from the S)
-    beta_combinedAnalysis.csv
-    windDir_withBadFlags_combinedAnalysis.csv (this has teh adjusted alpha such that 0 degrees is N, 90 E, 180 S, 270 W; it also has binary flags
+        beta_combinedAnalysis.csv
+    part 2:
+        windDir_withBadFlags_combinedAnalysis.csv (this has teh adjusted alpha such that 0 degrees is N, 90 E, 180 S, 270 W; it also has binary flags
                                                for when a wind direction is blowing through or near the tower)
-    windDir_IncludingBad_wS4rotation_combinedAnalysis.csv
-    windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
-    WindRose_spring.png
-    WindRose_fall.png
-    WindRose_combinedAnalysis.png
-    windRose_DAYLIGHTcombinedAnalysis.png
-    windRose_DaylightMay.png
-    windRose_DaylightOct.png
+        windDir_IncludingBad_wS4rotation_combinedAnalysis.csv
+        windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
+        WindRose_spring.png
+        WindRose_fall.png
+        WindRose_combinedAnalysis.png
+        windRose_DAYLIGHTcombinedAnalysis.png
+        windRose_DaylightMay.png
+        windRose_DaylightOct.png
     
     
 """
@@ -56,6 +65,12 @@ print('done with imports')
 
 #%% For first time running
 
+'''
+PART 1: only need to run this once to create "alpha_combinedAnalysis.csv" and "beta_combinedAnalysis.csv" files;
+
+can comment out after first run
+'''
+
 # alpha_s1 = []
 # alpha_s2 = []
 # alpha_s3 = []
@@ -67,7 +82,7 @@ print('done with imports')
 # beta_s4 = []
 
 # # filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level1_align-despike-interp/"
-# filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/"
+# filepath = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/"
 # for root, dirnames, filenames in os.walk(filepath): #this is for looping through files that are in a folder inside another folder
 #     for filename in natsort.natsorted(filenames):
 #         file = os.path.join(root, filename)
@@ -118,8 +133,8 @@ print('done with imports')
 # beta_df['beta_s3'] = beta_s3
 # beta_df['beta_s4'] = beta_s4
 
-# # file_save_path = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level4/"
-# file_save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+
+# file_save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 # alpha_df.to_csv(file_save_path + "alpha_combinedAnalysis.csv")
 # beta_df.to_csv(file_save_path + "beta_combinedAnalysis.csv")
 
@@ -127,9 +142,9 @@ print('done with imports')
 
 
 #%%
-# file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_save_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+
+plot_save_path = file_path
 
 sonic_file1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)

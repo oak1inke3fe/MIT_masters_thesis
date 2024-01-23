@@ -11,6 +11,8 @@ This file is used to calculate rate of TKE production using the direct covarianc
 Two different "methods", just manual ways of calculating the direct covariance, are given.
 Both produce the same answer.
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
@@ -19,7 +21,8 @@ INPUT files:
     zAvg_fromCTD_allSpring.csv
     zAvg_fromCTD_allFall.csv
 
-    
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     Ubar_CombinedAnalysis.csv
     UpWp_bar_CombinedAnalysis.csv
@@ -39,9 +42,8 @@ import matplotlib.pyplot as plt
 print('done with imports')
 #%%
 
-# file_path = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level4/"
-# file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+
 
 file_sonic1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_mean_df = pd.read_csv(file_path+file_sonic1)
@@ -126,7 +128,7 @@ plt.title('Production $m^2s^{-3}$ Combined')
 
 
 #%% Method 2 of calculating production. 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 s1_turbTerms_Df = pd.read_csv(file_path + "despiked_s1_turbulenceTerms_andMore_combined.csv")
 s1_turbTerms_Df = s1_turbTerms_Df.drop(['new_index'], axis=1)
 s2_turbTerms_Df = pd.read_csv(file_path + "despiked_s2_turbulenceTerms_andMore_combined.csv")

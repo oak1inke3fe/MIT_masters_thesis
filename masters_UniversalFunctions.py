@@ -4,8 +4,11 @@ Created on Wed Oct 11 14:04:24 2023
 
 @author: oaklin keefe
 
-This file is used to plot our data against the universal function curves from Edson 1998.
+This file is used to plot our data against the universal similarity functions from Edson 1998.
+There are options to perform this analysis with on-shore wind conditions as well as off-shore (see commented out sections of the code)
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     prodTerm_combinedAnalysis.csv
     despiked_s1_turbulenceTerms_andMore_combined.csv
@@ -20,7 +23,9 @@ INPUT files:
     rhoAvg_combinedAnalysis.csv
     windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
     
-    
+
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     Only figures
         
@@ -34,25 +39,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import binsreg
 import seaborn as sns
-import os
+
 print('done with imports')
 
-print(os.getcwd())
-os.chdir('/Users/oaklinkeefe/Documents/GitHub/masters_thesis/')
-print(os.getcwd())
 
-# from binscatter.py import binscatterplot
-# name = "binscatter"
-# print('done importing binscatter')
 
 g = -9.81
 kappa = 0.40 # von Karman constant used by Edson (1998) Similarity Theory paper
 # kappa =0.35 # Businger (1971) paper
-print('done with setting gravity (g = -9.81) and von-karman (kappa = 4)')
+print('done with setting gravity (g = -9.81) and von-karman (kappa = 0.4)')
 
 #%%
-# file_path = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/"
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r"/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/"
 
 sonic1_df = pd.read_csv(file_path + 'despiked_s1_turbulenceTerms_andMore_combined.csv')
 sonic2_df = pd.read_csv(file_path + 'despiked_s2_turbulenceTerms_andMore_combined.csv')

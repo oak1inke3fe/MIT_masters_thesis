@@ -6,12 +6,16 @@ Created on Mon May  8 09:56:44 2023
 
 This file is used to pad and/or restrict the wave dataset to the correct start/end dates of the spring/fall start and end dates 
 
+Input file location:
+    folder where wave data is stored; here: /code_pipeline/
 INPUT files:
     BBASIT_Spring_waves.mat
     BBASIT_Fall_waves.mat
     date_combinedAnalysis.csv
     windDir_withBadFlags_110to155_within15degRequirement_combinedAnalysis.csv
-    
+
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     wave_despiked_spring.csv
     wave_despiked_fall.csv
@@ -33,9 +37,9 @@ print('done with imports')
 import matplotlib.pyplot as plt
 
 #%%
-# file_path = r"Z:\Fall_Deployment\OaklinCopy_waveData/"
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
 
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/'
+file_save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 #%%
 
 file_spring = "BBASIT_Spring_waves.mat"
@@ -332,12 +336,12 @@ print('done FALL hampel')
 
 #%%
 # save new despiked values/dataframes to new files separated by spring/fall deployment
-wave_df_despiked_spring.to_csv(file_path + 'wave_despiked_spring.csv')
-wave_df_despiked_fall.to_csv(file_path + 'wave_despiked_fall.csv')
+wave_df_despiked_spring.to_csv(file_save_path + 'wave_despiked_spring.csv')
+wave_df_despiked_fall.to_csv(file_save_path + 'wave_despiked_fall.csv')
 
 print('done saving despiked to .csv')
 #%%
-
+file_path = file_save_path
 wave_df_combined_despiked = pd.concat([wave_df_despiked_spring, wave_df_despiked_fall], axis=0)
 dates_df = pd.read_csv(file_path + 'date_combinedAnalysis.csv')
 
@@ -350,7 +354,7 @@ print(wave_df_combined_despiked.head(9))
 wave_df_combined_despiked['new_index_arr'] = np.arange(len(wave_df_combined_despiked))
 wave_df_combined_despiked.set_index('new_index_arr', inplace=True)
 
-wave_df_combined_despiked.to_csv(file_path +'waveData_despiked_combinedAnalysis.csv')
+wave_df_combined_despiked.to_csv(file_save_path +'waveData_despiked_combinedAnalysis.csv')
 print('done. Saved to .csv')
 
 #%%
@@ -433,7 +437,7 @@ ax3.set_ylabel('$T$ [s]', fontsize=axis_font_size)
 plt.show()
 
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
+plot_savePath = file_save_path
 fig.savefig(plot_savePath + "timeseries_WaveData_Spring.png",dpi=300)
 fig.savefig(plot_savePath + "timeseries_WaveData_Spring.pdf")
 
@@ -485,7 +489,7 @@ ax3.set_ylabel('$T$ [s]', fontsize=axis_font_size)
 plt.show()
 
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
+plot_savePath = file_save_path
 fig.savefig(plot_savePath + "timeseries_WaveData_Fall.png",dpi=300)
 fig.savefig(plot_savePath + "timeseries_WaveData_Fall.pdf")
 

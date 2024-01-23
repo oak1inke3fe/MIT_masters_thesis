@@ -5,13 +5,15 @@ Created on Fri Mar 17 16:13:19 2023
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
+This file is used to calculate the 20min file averages of the high resolution paros pressure sensors from Port 6.
 
-This file is used to calculate the 20min file averages of the high resolution paros pressure sensors.
-
+Input file location:
+    /code_pipeline/Level1_align-interp/
 INPUT files:
-    port6/ paros files from /Level1_align-despike-interp/ folder
-    
+    port6/ paros files
+
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     parosAvg_combinedAnalysis.csv
     
@@ -25,10 +27,10 @@ import natsort
 
 print('done with imports')
 #%%
-# filepath = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level2_analysis\port6/"
-filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/'
-# save_path = r"Z:\Fall_Deployment\OaklinCopyMNode\code_pipeline\Level4/"
-save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+
+filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/'
+
+save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
 paros1_Pa_mean = []
 paros1_mb_mean = []

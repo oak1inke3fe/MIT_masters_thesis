@@ -5,14 +5,19 @@ Created on Mon Nov 27 14:45:24 2023
 
 @author: oaklin keefe
 This file is used to calculate roughness length, (z0) 
+It also plots comparisons to Ubar, Ustar, and compares Ubar with Ustar only
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv
     despiked_s2_turbulenceTerms_andMore_combined.csv
     despiked_s3_turbulenceTerms_andMore_combined.csv
     despiked_s4_turbulenceTerms_andMore_combined.csv
-    windDir_withBadFlags_110to155_within15degRequirement_combinedAnalysis.csv
-    
+    windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
+
+Output file location:
+    /code_pipeline/Level2/'    
 OUTPUT files:
     z0_combinedAnalysis.csv
     
@@ -36,8 +41,8 @@ print('done with imports')
 
 #%%
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_save_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+plot_save_path = file_path
 
 sonic_file1 = "despiked_s1_turbulenceTerms_andMore_combined.csv"
 sonic1_df = pd.read_csv(file_path+sonic_file1)
@@ -54,7 +59,7 @@ sonic4_df = pd.read_csv(file_path+sonic_file4)
 windDir_includingBadDirs_file = "windDir_IncludingBad_wS4rotation_combinedAnalysis.csv"
 windDir_includingBad_df = pd.read_csv(file_path + windDir_includingBadDirs_file)
 
-windDir_file = "windDir_withBadFlags_110to155_within15degRequirement_combinedAnalysis.csv"
+windDir_file = "windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv"
 windDir_df = pd.read_csv(file_path + windDir_file)
 
 date_file = "date_combinedAnalysis.csv"
@@ -151,9 +156,8 @@ plt.ylabel('$z_0$ [$m$]')
 plt.xlim(2,17)
 plt.ylim(0,0.005)
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
-plt.savefig(plot_savePath + "scatter_z0_v_Ubar.png",dpi=300)
-plt.savefig(plot_savePath + "scatter_z0_v_Ubar.pdf")
+plt.savefig(plot_save_path + "scatter_z0_v_Ubar.png",dpi=300)
+plt.savefig(plot_save_path + "scatter_z0_v_Ubar.pdf")
 print('done with plot')
 
 #%%
@@ -235,9 +239,8 @@ plt.ylabel('$z_0$ [$m$]')
 plt.xlim(2,17)
 plt.ylim(0,0.005)
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
-plt.savefig(plot_savePath + "scatterBIN_z0_v_Ubar.png",dpi=300)
-plt.savefig(plot_savePath + "scatterBIN_z0_v_Ubar.pdf")
+plt.savefig(plot_save_path + "scatterBIN_z0_v_Ubar.png",dpi=300)
+plt.savefig(plot_save_path + "scatterBIN_z0_v_Ubar.pdf")
 print('done with plot')
 
 #%% plot z0 versus U*
@@ -253,9 +256,8 @@ plt.ylabel('$z_0$ [$m$]')
 plt.xlim(0,1)
 plt.ylim(0,0.01)
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
-plt.savefig(plot_savePath + "scatter_z0_v_uStar.png",dpi=300)
-plt.savefig(plot_savePath + "scatter_z0_v_uStar.pdf")
+plt.savefig(plot_save_path + "scatter_z0_v_uStar.png",dpi=300)
+plt.savefig(plot_save_path + "scatter_z0_v_uStar.pdf")
 print('done with plot')
 
 #%%
@@ -305,9 +307,8 @@ plt.ylabel('$z_0$ [$m$]')
 plt.xlim(0,1.05)
 plt.ylim(-0.0001,0.005)
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
-plt.savefig(plot_savePath + "scatterBIN_z0_v_uStar.png",dpi=300)
-plt.savefig(plot_savePath + "scatterBIN_z0_v_uStar.pdf")
+plt.savefig(plot_save_path + "scatterBIN_z0_v_uStar.png",dpi=300)
+plt.savefig(plot_save_path + "scatterBIN_z0_v_uStar.pdf")
 print('done with plot')
 
 #%% plot wind speed (Ubar) versus U*
@@ -320,9 +321,9 @@ plt.title('Wind Speed ($\overline{u}$) versus Friction Velocity ($u_*$)')
 plt.xlabel('$\overline{u}$ [$ms^{-1}$]')
 plt.ylabel('$u_*$ [$ms^{-1}$]')
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
-plt.savefig(plot_savePath + "scatter_Ubar_v_uStar.png",dpi=300)
-plt.savefig(plot_savePath + "scatter_Ubar_v_uStar.pdf")
+
+plt.savefig(plot_save_path + "scatter_Ubar_v_uStar.png",dpi=300)
+plt.savefig(plot_save_path + "scatter_Ubar_v_uStar.pdf")
 print('done with plot')
 
 #%%
@@ -372,7 +373,6 @@ plt.ylabel('$\overline{u}$ [$ms^{-1}$]')
 # plt.xlim(0,1.05)
 # plt.ylim(-0.0001,0.005)
 
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/plots/'
-plt.savefig(plot_savePath + "scatterBIN_Ubar_v_uStar.png",dpi=300)
-plt.savefig(plot_savePath + "scatterBIN_Ubar_v_uStar.pdf")
+plt.savefig(plot_save_path + "scatterBIN_Ubar_v_uStar.png",dpi=300)
+plt.savefig(plot_save_path + "scatterBIN_Ubar_v_uStar.pdf")
 print('done with plot')

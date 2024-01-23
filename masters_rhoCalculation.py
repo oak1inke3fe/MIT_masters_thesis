@@ -3,17 +3,20 @@
 """
 Created on Mon Oct 23 10:45:16 2023
 
-@author: oak
-
+@author: oaklin keefe
 
 This file is used to calculate the 20min file averages of rho (density) based on 20min file averages of temperature observations from the met/port5 sensor,
 and 20min file averages of pressure observations from the high-res paros p sensor.
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     metAvg_CombinedAnalysis.csv
     parosAvg_combinedAnalysis.csv
     R = 287.053 #[Pa K^-1 m^3 kg^-1] # R is the ideal gas constant
-    
+
+Output file location:
+    /code_pipeline/Level2/
 OUTPUT files:
     rhoAvg_CombinedAnalysis.csv
     
@@ -24,7 +27,7 @@ import numpy as np
 print('done with imports')
 
 #%%
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 met_df = pd.read_csv(file_path+"metAvg_CombinedAnalysis.csv")
 p_df = pd.read_csv(file_path+"parosAvg_combinedAnalysis.csv")
 

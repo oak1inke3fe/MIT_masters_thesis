@@ -4,14 +4,15 @@ Created on Mon Sep 11 12:08:04 2023
 
 @author: oaklin keefe
 
-NOTE: this file needs to be run on the remote desktop.
 
 This file is used to calculate the rate of TKE dissipation using the inertial subrange method and the PSD of the horizontal velocity.
 
 Additionally, a Mean Absolute Deviation (MAD) critera from Bluteau et al. (2016) was used to quality control extreme spectra.
 
+Input file location:
+    /code_pipeline/Level1_align-interp/
 INPUT files:
-    sonic files from /Level1_align-despike-interp/ folder
+    sonic files (ports 1-4) input folder
     z_airSide_allSpring.csv
     z_airSide_allFall.csv
     
@@ -20,7 +21,8 @@ We also set:
     alpha = 0.53 (when working with U and not W)
     alpha = c1 = c1_prime
 
-    
+Output file locations:
+    /code_pipeline/Level2/
 OUTPUT files:
     Puu_exampleSpectra.png
     epsU_terms_sonic1_MAD_k_UoverZbar.csv
@@ -46,15 +48,10 @@ import datetime
 print('done with imports')
 
 #%%
-# plot_savePath = r"smb://zippel-nas.local/bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/plots/"
-# plot_savePath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level4\plots/"
-# filepath = r"Z:\combined_analysis\OaklinCopyMNode\code_pipeline\Level4/"
-# test_filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
-# test_df = pd.read_csv(test_filepath + 'meanQuantities_sonic1.csv')
 
-filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
-plot_savePath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/plots/'
+plot_savePath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 print('done with filepath')
 
 #%%
@@ -131,7 +128,7 @@ def interp_sonics4(df_sonics4):
 # returns: df_align_interp_s4
 print('done with interp_sonics4 function')
 #%% testing on one file
-filepath_PC = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-despike-interp/'
+filepath_PC = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level1_align-interp/'
 
 my_file_level1_PC = filepath_PC+ 'mNode_Port1_20221012_192000_1.csv'
 
@@ -249,7 +246,7 @@ plt.title('Wavenumber Spectra (Puu) with Fixed Inertial Subrange (Fixed ISR)')
 
 #%% For running on multiple files, we need the heights of the sonics relative to the sea-surface:
 
-z_filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+z_filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 z_avg_df_spring = pd.read_csv(z_filepath+"z_airSide_allSpring.csv")
 z_avg_df_spring = z_avg_df_spring.drop('Unnamed: 0', axis=1)
 z_avg_df_fall = pd.read_csv(z_filepath+"z_airSide_allFall.csv")
@@ -278,7 +275,7 @@ eps_wnoise_all_1 = [0]
 MAD_criteria_fit_1 = [0]
 MAD_all_1 = [0]
 
-file_save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+file_save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 
 '''
 NOTE: you need to run this cell 4 different times, changing teh mNode_arr to each sonic number, before proceeding onto the next cell!

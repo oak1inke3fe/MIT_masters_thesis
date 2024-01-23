@@ -10,12 +10,14 @@ Created on Thu Oct 26 10:31:02 2023
 This file is used to ccreate an empty df for rainrate that is used in COARE, and to create a file full of the 1 lat,lon coordinate
 location of the tower, which is also used in COARE.
 
-
+Input file location:
+    code_pipeline/Level2/
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined.csv (this is used to just get the length of the dataset)
     break_index = 3959 (this is the index of the last point in the spring deployment; used for breaking the dataset into spring and fall)
 
-    
+Output file location:
+    code_pipeline/Level2/    
 OUTPUT files:
     rain_rate_allSpring.csv
     rain_rate_allFall.csv
@@ -34,8 +36,8 @@ import pandas as pd
 print('done with imports')
 
 #%%
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-path_save = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+path_save = file_path
 sonic1_df = pd.read_csv(file_path + 'despiked_s1_turbulenceTerms_andMore_combined.csv')
 break_index = 3959
 

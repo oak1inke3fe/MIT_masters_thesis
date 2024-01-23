@@ -2,20 +2,23 @@
 """
 Created on Tue Sep 12 10:25:16 2023
 
-@author: oak
+@author: oaklin keefe
 
-NOtE: this code needs to be run on the remote desktop (or computer that has the CTD data).
 
 This file is used to calculate the height of each sonic above the sea surface given the pressure of the CTD sensor, and knowing
 the distance between the CTD sensor and all of the sonics.
 
-
+Input file locations:
+    folder storing the raw CTD data
 INPUT files:
     CTD_data_spring.mat  (file with ctd observations of spring deployment)
     Fall_Seabird_CTD.mat (file with ctd observations of fall deployment)
 
-    
-The OUTPUT file is one files with all the buoyancy terms per sonic combined into one dataframe (saved as a .csv):
+Output file locations:
+    /code_pipeline/ 
+    or
+    /code_pipeline/Level2 
+OUTPUT files
     ctd20mAvg_allSpring.csv     (file taking average of the 20min period and then concatenating them together; spring deployment, ctd obs)
     ctd20mAvg_allFall.csv       (file taking average of the 20min period and then concatenating them together; fall deployment, ctd obs)
     zAvg_fromCTD_allSpring.csv  (file filled with the full spring sonic/other sensor heights average (1 value that represents the entrie time period's average))
@@ -91,7 +94,8 @@ ctd_df_spring['salnity'] = np.array(salt_1).flatten()
 ctd_df_spring['sst'] = np.array(sst_1).flatten()
 ctd_df_spring['depth'] = np.array(depth_1).flatten()
 
-save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/'
+save_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/'
+
 ctd_df_spring.to_csv(save_path+"ctd_spring.csv")
 
 
@@ -172,13 +176,13 @@ plt.title('Fall depth')
 # plt.xlim(1900,2100)
 #%%
 # file_path_spring = r"Z:\combined_analysis\OaklinCopyMNode/"
-file_path_spring = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/'
+file_path_spring = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/'
 file_spring = "ctd_spring.csv"
 ctd_df_spring = pd.read_csv(file_path_spring+file_spring)
 ctd_df_spring = ctd_df_spring.drop('Unnamed: 0', axis=1)
 print(ctd_df_spring.columns)
 
-file_path_fall = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/'
+file_path_fall = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/'
 file_fall = "ctd_fall.csv"
 ctd_df_fall = pd.read_csv(file_path_fall+file_fall)
 ctd_df_fall = ctd_df_fall.drop('Unnamed: 0', axis=1)
@@ -232,7 +236,7 @@ spring_start_index = 8
 spring_stop_index = 3967
 
 ctd_20minAvg_df_spring = ctd_20minAvg_df_spring[spring_start_index : spring_stop_index + 1]
-path_save = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level4/'
+path_save = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 ctd_20minAvg_df_spring.to_csv(path_save+'ctd20mAvg_allSpring.csv')
 
 
@@ -464,7 +468,7 @@ print('done with saving to .csv')
 print('done with code')
 
 #%%
-filepath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
+filepath = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
 ctd_df_spring = pd.read_csv(filepath + 'ctd20mAvg_allSpring.csv')
 print('spring head')
 print(ctd_df_spring.head(5))

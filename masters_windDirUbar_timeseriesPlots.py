@@ -8,15 +8,19 @@ Created on Tue Dec  5 09:32:10 2023
 
 This file is used to make timeseries plots of wind direction and wind speed for both deployments. 
 
-NOTE: only sonic 3 is used for simplicity, and as a proxy for the heighest sonic
+NOTE: only sonic 3 is used for simplicity, and since we excluded sonic 4 from the majority of Thesis analysis.
 
+Input file location:
+    /code_pipeline/Level2/
 INPUT files:
     despiked_s1_turbulenceTerms_andMore_combined
     despiked_s2_turbulenceTerms_andMore_combined.csv
     despiked_s3_turbulenceTerms_andMore_combined.csv
     windDir_withBadFlags_110to160_within15degRequirement_combinedAnalysis.csv
     date_combinedAnalysis.csv
-    
+
+Output file location:
+    /code_pipeline/Level2/    
 OUTPUT files:
     Only figures:
         
@@ -32,8 +36,8 @@ import matplotlib.dates as mdates
 print('done with imports')
 #%%
 
-file_path = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/myAnalysisFiles/'
-plot_savePath = r'/Users/oaklinkeefe/documents/GitHub/masters_thesis/Plots/'
+file_path = r'/run/user/1005/gvfs/smb-share:server=zippel-nas.local,share=bbasit/combined_analysis/OaklinCopyMNode/code_pipeline/Level2/'
+plot_savePath = file_path
 
 sonic_file3 = "despiked_s3_turbulenceTerms_andMore_combined.csv"
 sonic3_df = pd.read_csv(file_path+sonic_file3)
